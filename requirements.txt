@@ -1,0 +1,14 @@
+langchain>=0.1.0,<0.2.0
+langchain-community>=0.0.30,<0.1.0
+langchain-huggingface>=0.0.1,<0.1.0 # Para embeddings de HuggingFace
+ollama>=0.1.8,<0.2.0             # Cliente Python de Ollama (opcional, Langchain lo maneja)
+chromadb>=0.4.24,<0.5.0           # Base de datos vectorial local
+sentence-transformers>=2.2.0     # Para descargar modelos de embeddings
+pypdf>=4.0.0,<5.0.0               # Para cargar documentos PDF
+python-dotenv>=1.0.0,<2.0.0       # Para manejar variables de entorno (opcional)
+unstructured[md,pdf]>=0.13.0      # Loader más robusto para varios formatos (instala dependencias extra)
+# Si unstructured da problemas o quieres algo más ligero para MD/TXT:
+# python-magic
+# markdown
+tiktoken # Usado por Langchain para tokenización
+einops   # <-- Añade esta línea

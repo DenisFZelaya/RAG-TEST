@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_service
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama # Persiste los modelos descargados
+    tty: true # Mantiene el contenedor corriendo
+    restart: unless-stopped
+    # Opcional: Limitar recursos si es necesario
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2.0'
+    #       memory: 8G
+
+  rag_app:
+    build: . # Construye la imagen desde el Dockerfile en el directorio actual
+    container_name: rag_guidelines_app
+    depends_on:
+      - ollama
+    volumes:
+      # Montar el código de la app para desarrollo (refleja cambios sin reconstruir)
+      # ¡Comenta o elimina esto para una imagen de "producción"!
+      - ./app:/app/app
+      # Montar directorio de datos para que la app pueda leerlos
+      - ./data:/app/data
+      # Montar directorio para persistir la base de datos vectorial
+      - ./vector_store:/app/vector_store
+    environment:
+      # Asegura que la app apunte al servicio ollama dentro de la red Docker
+      - OLLAMA_BASE_URL=http://ollama:11434
+      # Puedes pasar otras variables de config.py aquí si lo deseas
+      # - LLM_MODEL=mistral:7b # Ejemplo para sobreescribir
+    tty: true # Necesario para mantener el contenedor corriendo con el CMD "tail -f"
+    stdin_open: true # Necesario para `docker attach` o `docker exec -it`
+    restart: unless-stopped
+
+volumes:
+  ollama_data: # Define el volumen para persistir los modelos de Ollama

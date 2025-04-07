@@ -183,23 +183,25 @@ def setup_rag_chain(vector_store, llm):
 
     # Plantilla de Prompt ESTRICTA - ¡Clave para tu requerimiento!
     prompt_template = """
-    Eres un asistente experto en los lineamientos y estándares de desarrollo del proyecto definidos en el siguiente CONTEXTO.
-    Tu tarea es responder la PREGUNTA del usuario basándote *única y exclusivamente* en la información proporcionada en el CONTEXTO.
-    NO utilices ningún conocimiento externo o previo.
-    NO inventes información que no esté explícitamente en el CONTEXTO.
-    Si la respuesta no se encuentra en el CONTEXTO, responde exactamente:
-    "La información solicitada no se encuentra en el documento de lineamientos proporcionado."
-    No añadas explicaciones adicionales si la información no está.
-    Sé conciso y directo, respondiendo solo lo que se pregunta si la información está disponible.
+        Eres un asistente experto en la creación de elementos de trabajo (cards) para Azure DevOps, siguiendo estrictamente las plantillas y ejemplos proporcionados en el CONTEXTO.
 
-    CONTEXTO:
-    {context}
+        TAREA PRINCIPAL: Generar el contenido detallado para una tarjeta de Azure DevOps basándote en la SOLICITUD del usuario y utilizando la ESTRUCTURA/PLANTILLA encontrada en el CONTEXTO recuperado.
 
-    PREGUNTA:
-    {question}
+        CONTEXTO (Contiene la plantilla/ejemplo de estructura y campos obligatorios):
+        {context}
 
-    RESPUESTA (basada únicamente en el CONTEXTO):
-    """
+        SOLICITUD DEL USUARIO (Describe qué card se necesita crear):
+        {question}
+
+        INSTRUCCIONES DETALLADAS:
+        1.  **Identifica la Plantilla:** Examina el CONTEXTO para encontrar la estructura, los campos y el formato definidos para el tipo de tarjeta mencionada o implícita en la SOLICITUD (Task, Bug, PBI, etc.).
+        2.  **Adhiérete a la Estructura:** Tu salida DEBE seguir *exactamente* la estructura y los nombres de los campos presentes en la plantilla del CONTEXTO. NO inventes campos nuevos. NO omitas campos obligatorios de la plantilla.
+        3.  **Genera Contenido Relevante:** Rellena los campos de la plantilla (Título, Descripción, Criterios de Aceptación, Pasos Técnicos, etc.) con información específica y detallada, inferida a partir de la SOLICITUD del usuario. Debes "pensar" en los detalles necesarios para cumplir la solicitud dentro del marco de la plantilla. ¡Sé creativo pero realista!
+        4.  **Formato de Salida:** Presenta la tarjeta completa en formato MARKDOWN, utilizando encabezados (## o ###) para los nombres de los campos principales (como Título) y listas o texto normal para el contenido, imitando cómo se vería en Azure DevOps. Asegúrate de incluir TODOS los campos de la plantilla recuperada.
+        5.  **Manejo de Plantilla Ausente:** Si el CONTEXTO recuperado no contiene una plantilla o ejemplo claro y relevante para la SOLICITUD, responde únicamente: "No se encontró una plantilla adecuada en el documento de lineamientos para crear este tipo de tarjeta."
+
+        SALIDA (Tarjeta Azure DevOps en formato Markdown):
+        """
     QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt_template)
 
     # Configurar el Retriever

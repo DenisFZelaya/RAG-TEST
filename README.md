@@ -86,3 +86,13 @@ documentos proporcionados en la carpeta `data/`.
 
 
 docker-compose exec rag_app python -m app.main --index --force-reindex
+
+docker-compose exec rag_app python -m app.main --query "¿[Tu pregunta específica sobre el contenido del PDF]?"
+
+Recrear los Contenedores:
+Detén los contenedores existentes y vuelve a levantarlos aplicando los cambios en docker-compose.yml. El flag --force-recreate es importante aquí.
+# Detener (si están corriendo)
+docker-compose down
+
+# Recrear y levantar en segundo plano
+docker-compose up -d --force-recreate
